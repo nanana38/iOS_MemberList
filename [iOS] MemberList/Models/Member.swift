@@ -8,6 +8,11 @@
 import Foundation
 import UIKit
 
+protocol MemberDelegate: AnyObject {
+    func addNewMember(_ member: Member)
+    func update(index: Int, _ member: Member)
+}
+
 struct Member {
     lazy var memberImage: UIImage? = {
         guard let name = name else {

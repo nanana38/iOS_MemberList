@@ -22,17 +22,16 @@ final class ViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        
         setupNaviBar()
         setupTableView()
         setupDatas()
         setupTableViewConstraints()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        tableView.reloadData()
-    }
+
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        tableView.reloadData()
+//    }
     
     func setupNaviBar() {
         title = "회원 목록"
@@ -46,7 +45,6 @@ final class ViewController: UIViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         
         self.navigationItem.rightBarButtonItem = self.plusButton
-        
     }
     
     func setupTableView() {
@@ -74,6 +72,8 @@ final class ViewController: UIViewController {
     
     @objc func plusButtonTapped() {
         let detailVC = DetailViewController()
+        detailVC.delegate = self
+        
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }
@@ -95,12 +95,24 @@ extension ViewController: UITableViewDataSource {
 
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         let detailVC = DetailViewController()
-        let array = memberListManager.getMemberList()
-       
-        detailVC.member = array[indexPath.row]
+        detailVC.delegate = self
+        
+        let array = memberListManager.getMemberList()[indexPath.row]
+        detailVC.member = array
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 
-
+extension ViewController: MemberDelegate {
+    func addNewMember(_ member: Member) {
+        memberListManager.makeNewMember(member)
+        tableView.reloadData()
+    }
+    
+    func update(index: Int, _ member: Member) {
+        memberListManager.updateMemberInfo(index: index, member)
+        tableView.reloadData()
+    }
+}

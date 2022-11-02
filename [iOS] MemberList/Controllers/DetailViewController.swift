@@ -12,6 +12,8 @@ final class DetailViewController: UIViewController {
 
     private let detailView = DetailView()
     
+    weak var delegate: MemberDelegate?
+    
     var member: Member?
     
     override func loadView() {
@@ -54,7 +56,6 @@ final class DetailViewController: UIViewController {
     }
     
     @objc func saveButtonTapped() {
-        print("버튼 눌림")
         if member == nil {
             let name = detailView.nameTextField.text ?? ""
             let age = Int(detailView.ageTextField.text ?? "")
@@ -63,12 +64,15 @@ final class DetailViewController: UIViewController {
 
             var newMember =
             Member(name: name, age: age, phone: phoneNumber, address: address)
+            
             newMember.memberImage = detailView.mainImageView.image
             
-            let index = navigationController!.viewControllers.count - 2
-            let vc = navigationController?.viewControllers[index] as! ViewController
-            vc.memberListManager.makeNewMember(newMember)
+            delegate?.addNewMember(newMember)
             
+//            let index = navigationController!.viewControllers.count - 2
+//            let vc = navigationController?.viewControllers[index] as! ViewController
+//            vc.memberListManager.makeNewMember(newMember)
+//            
             
         } else {
             member!.memberImage = detailView.mainImageView.image
@@ -78,16 +82,21 @@ final class DetailViewController: UIViewController {
             member!.phone = detailView.phoneNumberTextField.text ?? ""
             member!.address = detailView.addressTextField.text ?? ""
             
-            detailView.member = member
-            let index = navigationController!.viewControllers.count - 2
-            let vc = navigationController?.viewControllers[index] as! ViewController
-            vc.memberListManager.updateMemberInfo(index: memberId, member!)
+            delegate?.update(index: memberId, member!)
+            
+//            detailView.member = member
+//            let index = navigationController!.viewControllers.count - 2
+//            let vc = navigationController?.viewControllers[index] as! ViewController
+//            vc.memberListManager.updateMemberInfo(index: memberId, member!)
         }
         
         self.navigationController?.popViewController(animated: true)
         
     }
-
+    
+    deinit {
+        print("디테일 뷰컨트롤러 해제")
+    }
 }
 
 extension DetailViewController: PHPickerViewControllerDelegate {

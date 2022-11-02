@@ -226,7 +226,6 @@ class DetailView: UIView {
         setupStackView()
         setupMemberIdTextField()
         setupNotification()
-    
     }
     
     required init?(coder: NSCoder) {
@@ -303,8 +302,6 @@ class DetailView: UIView {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-
-
 }
 
 extension DetailView: UITextFieldDelegate {
@@ -314,5 +311,4 @@ extension DetailView: UITextFieldDelegate {
         }
         return true
     }
-    
 }
